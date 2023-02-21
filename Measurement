@@ -1,0 +1,49 @@
+import sympy 
+from sympy.physics.quantum.qubit import Ket as Ket_state
+from sympy.physics.quantum.dagger import Dagger
+from sympy.physics.quantum.tensorproduct import TensorProduct
+from sympy.physics.quantum.qapply import qapply
+from sympy.printing.mathematica import *
+from fractions import Fraction
+from sympy import Rational
+
+
+# Define the symbolic variables a, b, and theta
+a, b, theta0, theta1, sigma0, sigma1 = sympy.symbols('a b theta0 theta1 sigma0 sigma1', real=True)
+
+# Define the |0> and |1> states using the ket_state function
+zero_state = Ket_state(0)
+one_state = Ket_state(1)
+
+phi_0_state = Ket_state('phi_0')
+phi_1_state = Ket_state('phi_1')
+
+
+w_0_state = Ket_state('w_0')
+w_1_state = Ket_state('w_1')
+
+
+from IPython.display import display
+
+
+state0 = w_0_state*phi_0_state*sympy.exp(1j*theta0)*sympy.exp(1j*sigma0)*(Rational(1,4)*a +Rational(1,4)*1j*b) + w_0_state*phi_1_state*sympy.exp(1j*theta1)*sympy.exp(1j*sigma0)*(1j*b/4-a/4)
+-w_1_state*phi_0_state*sympy.exp(1j*theta0)*sympy.exp(1j*sigma1)*(a/4+1j*b/4)  +w_1_state*phi_1_state*(1j*b/4-a/4)*sympy.exp(1j*theta1)*sympy.exp(1j*sigma1)
+
+
+state1 = w_0_state*phi_0_state*sympy.exp(1j*theta0)*sympy.exp(1j*sigma0)*(1j*Rational(1,4)*a -Rational(1,4)*b) - w_0_state*phi_1_state*sympy.exp(1j*theta1)*sympy.exp(1j*sigma0)*(b/4+1j*a/4)
++w_1_state*phi_0_state*sympy.exp(1j*theta0)*sympy.exp(1j*sigma1)*(1j*a/4-b/4) +w_1_state*phi_1_state*(b/4+1j*a/4)*sympy.exp(1j*theta0)*sympy.exp(1j*sigma0)
+
+# Take the outer product of the state by taking the tensor product with its adjoint
+outer_product0 = TensorProduct(state0, Dagger(state0))
+
+outer_product1 = TensorProduct(state1, Dagger(state1))
+# Use the qapply function to simplify the result
+
+simplified_resultn0 = qapply(outer_product0)
+# Your sympy code here
+simplified_resultn1 = qapply(outer_product1)
+
+final_simplified_result= simplified_resultn1 + simplified_resultn0
+print(sympy.latex(simplified_resultn0, mode='inline'))
+print(sympy.latex(simplified_resultn1, mode='inline'))
+print(sympy.latex(final_simplified_result, mode='inline'))
